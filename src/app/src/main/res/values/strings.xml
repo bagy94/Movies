@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">Movies</string>
+    <!--API URL-->
+    <string name="BASE_IMAGE_URL">https://image.tmdb.org/t/p/w500/</string>
+    <string name="BASE_API_URL">https://api.themoviedb.org/3/</string>
+
+    <!--API KEY-->
+    <string name="API_KEY">fe3b8cf16d78a0e23f0c509d8c37caad</string>
+
+    <!--Image content description-->
+    <string name="movie_item_image_description">Movie poster</string>
+    <string name="movie_cover_image">Cover image for selected movie</string>
+
+    <!--Labels-->
+    <string name="release_date_label">Release date of movie:</string>
+    <string name="genres_label">Genres:</string>
+    <string name="overview_label">Overview</string>
+    <!--MESSAGES-->
+    <string name="message_must_pick_category">You must pick one category</string>
+
+    <!--Spinner categories-->
+    <string-array name="movie_categories">
+        <item>Top rated</item>
+        <item>Popular</item>
+    </string-array>
 </resources>

@@ -1,11 +1,28 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:spinnerDropDownItemStyle">@style/SpinnerItemStyle</item>
+    </style>
+
+    <style name="ListItemHeadline" parent="TextAppearance.MaterialComponents.Headline2">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
+
+    <style name="DetailLabel" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/textColorPrimaryLight</item>
+    </style>
+
+
+    <style name="SpinnerItemStyle" parent="Widget.AppCompat.DropDownItem.Spinner">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
 </resources>

@@ -1,35 +1,75 @@
 package hr.agency04.bagy94.movies.ui.movieslist;
 
-import androidx.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+
+import com.google.android.material.snackbar.Snackbar;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import hr.agency04.bagy94.common_java.BaseFragment;
 import hr.agency04.bagy94.movies.R;
+import hr.agency04.bagy94.movies.adapters.MoviesAdapter;
+import hr.agency04.bagy94.movies.data.Category;
+import hr.agency04.bagy94.movies.data.Movie;
+import hr.agency04.bagy94.movies.databinding.FragmentMoviesListBinding;
+import hr.agency04.bagy94.movies.ui.moviedetail.MovieDetailFragment;
+import hr.agency04.bagy94.movies.utils.OnListItemSelected;
 
-public class MoviesListFragment extends Fragment {
+public class MoviesListFragment extends BaseFragment<MoviesListViewModel, FragmentMoviesListBinding> implements OnListItemSelected<Movie> {
 
-    public static MoviesListFragment newInstance() {
-        return new MoviesListFragment();
-    }
+    private MoviesAdapter mMoviesAdapter;
 
-    private MoviesListViewModel mViewModel;
+    private AdapterView.OnItemSelectedListener onSpinnerItemClickListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            switch (position) {
+                case 0:
+                    mViewModel.setSelected(Category.TopRated);
+                    break;
+                case 1:
+                    mViewModel.setSelected(Category.Popular);
+                    break;
+                default:
+                    Log.d(MoviesListFragment.class.getName(), "Case not found");
+            }
+        }
 
-    @Nullable
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+            Snackbar.make(getView(), getString(R.string.message_must_pick_category), Snackbar.LENGTH_SHORT).show();
+        }
+    };
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.movies_list_fragment, container, false);
+    protected int getViewId() {
+        return R.layout.fragment_movies_list;
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(MoviesListViewModel.class);
-        // TODO: Use the ViewModel
+    protected Class<MoviesListViewModel> getViewModelClass() {
+        return MoviesListViewModel.class;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mMoviesAdapter = new MoviesAdapter(this);
+        mViewBinding.movies.setLayoutManager(new LinearLayoutManager(getContext()));
+        mViewBinding.movies.setAdapter(mMoviesAdapter);
+        mViewBinding.movies.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        mViewBinding.selectCategory.setOnItemSelectedListener(onSpinnerItemClickListener);
+
+        mViewModel.getMovies().observe(this, movies -> mMoviesAdapter.onNewDataSet(movies));
+    }
+
+    @Override
+    public void onListItemSelected(Movie movie) {
+        Bundle args = MovieDetailFragment.createArguments(movie);
+        navigate(R.id.openDetails, args);
+    }
 }
