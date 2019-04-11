@@ -5,10 +5,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
-import androidx.recyclerview.widget.SnapHelper;
 import hr.agency04.bagy94.common_java.BaseFragment;
 import hr.agency04.bagy94.movies.R;
 import hr.agency04.bagy94.movies.adapters.MoviesAdapter;
@@ -33,27 +30,27 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailViewModel, Frag
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (mMovie != null) {
-            putMovie();
+            onMovieSet(mMovie);
+            requestGenresLabels();
             postSimilarMovies();
         }
     }
 
-    private void postSimilarMovies() {
-        final MoviesAdapter adapter = new MoviesAdapter(this, false);
-        SnapHelper helper = new LinearSnapHelper();
-        mViewBinding.similarMovies.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        mViewBinding.similarMovies.setAdapter(adapter);
-        mViewBinding.similarMovies.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
-        helper.attachToRecyclerView(mViewBinding.similarMovies);
-        mViewModel.getSimilarMovies(mMovie)
-                .observe(this, movies -> {
-                    adapter.onNewDataSet(movies);
-                });
+    public void onMovieSet(Movie movie) {
+        mViewModel.setMovie(movie);
+        mViewBinding.setMovie(movie);
     }
 
-    private void putMovie() {
-        mViewBinding.setMovie(mMovie);
-        mViewModel.getGenres(mMovie.getGenreIds())
+    private void postSimilarMovies() {
+        final MoviesAdapter adapter = new MoviesAdapter(this, false);
+        mViewBinding.similarMovies.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        mViewBinding.similarMovies.setAdapter(adapter);
+        mViewModel.getSimilarMovies(mMovie)
+                .observe(this, adapter::onNewDataSet);
+    }
+
+    private void requestGenresLabels() {
+        mViewModel.getGenres()
                 .observe(this, genres -> {
                     StringBuilder builder = new StringBuilder();
                     for (int i = 0; i < genres.size(); i++) {
@@ -81,6 +78,8 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailViewModel, Frag
 
     @Override
     public void onListItemSelected(Movie movie) {
-
+        if (movie != null) {
+            onMovieSet(movie);
+        }
     }
 }
