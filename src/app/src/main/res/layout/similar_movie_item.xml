@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="movie"
+            type="hr.agency04.bagy94.movies.data.Movie" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="@dimen/movie_item_width"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="@dimen/poster_image_size"
+            android:layout_height="@dimen/poster_image_size"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/movie_item_image_description"
+            app:imageUrl="@{movie.posterPath}"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{movie.title}"
+            android:textAlignment="center"
+            android:textAppearance="@style/DetailLabel"
+            tools:text="Movie title" />
+    </LinearLayout>
+</layout>

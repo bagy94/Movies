@@ -17,6 +17,7 @@
     <string name="overview_label">Overview</string>
     <!--MESSAGES-->
     <string name="message_must_pick_category">You must pick one category</string>
+    <string name="similar_movies_label">Similar movies</string>
 
     <!--Spinner categories-->
     <string-array name="movie_categories">

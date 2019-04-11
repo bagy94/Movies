@@ -7,26 +7,38 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
+import hr.agency04.bagy94.movies.BR;
 import hr.agency04.bagy94.movies.R;
 import hr.agency04.bagy94.movies.data.Movie;
-import hr.agency04.bagy94.movies.databinding.MovieItemBinding;
 import hr.agency04.bagy94.movies.utils.OnListItemSelected;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> {
 
     private List<Movie> mMovies;
     private OnListItemSelected<Movie> mItemClickListener;
+    private boolean isVertical = true;
 
     public MoviesAdapter(OnListItemSelected<Movie> mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
+    }
+
+    public MoviesAdapter(OnListItemSelected<Movie> mItemClickListener, boolean isVertical) {
+        this.mItemClickListener = mItemClickListener;
+        this.isVertical = isVertical;
     }
 
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        MovieItemBinding movieItemBinding = DataBindingUtil.inflate(inflater, R.layout.movie_item, parent, false);
+        ViewDataBinding movieItemBinding = null;
+        if (isVertical) {
+            movieItemBinding = DataBindingUtil.inflate(inflater, R.layout.movie_item, parent, false);
+        } else {
+            movieItemBinding = DataBindingUtil.inflate(inflater, R.layout.similar_movie_item, parent, false);
+        }
         MovieViewHolder vh = new MovieViewHolder(movieItemBinding, mItemClickListener);
         return vh;
     }
@@ -47,22 +59,23 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     }
 
     static class MovieViewHolder extends RecyclerView.ViewHolder {
-        private MovieItemBinding itemBinding;
+        private ViewDataBinding itemBinding;
+        private Movie mMovie;
         private OnListItemSelected<Movie> mListener;
 
-        public MovieViewHolder(MovieItemBinding binding, OnListItemSelected<Movie> mListener) {
+        public MovieViewHolder(ViewDataBinding binding, OnListItemSelected<Movie> mListener) {
             super(binding.getRoot());
             itemBinding = binding;
-            binding.getRoot().setOnClickListener(v -> {
-                Movie m = binding.getMovie();
-                if (m != null) {
-                    mListener.onListItemSelected(m);
+            itemBinding.getRoot().setOnClickListener(v -> {
+                if (mMovie != null) {
+                    mListener.onListItemSelected(mMovie);
                 }
             });
         }
 
         private void bind(Movie movie) {
-            itemBinding.setMovie(movie);
+            mMovie = movie;
+            itemBinding.setVariable(BR.movie, movie);
             itemBinding.executePendingBindings();
         }
     }

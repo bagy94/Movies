@@ -26,11 +26,16 @@ public class MoviesRepository {
 
     public LiveData<List<Movie>> getTopRated() {
         Call<MoviesApiResponse> call = mCallProvider.getTopRated(mApiKey);
-        return Transformations.map(mCallHandler.getData(call), response -> response.getResults());
+        return Transformations.map(mCallHandler.getData(call), MoviesApiResponse::getResults);
     }
 
     public LiveData<List<Movie>> getMostPopular() {
         Call<MoviesApiResponse> call = mCallProvider.getPopular(mApiKey);
-        return Transformations.map(mCallHandler.getData(call), response -> response.getResults());
+        return Transformations.map(mCallHandler.getData(call), MoviesApiResponse::getResults);
+    }
+
+    public LiveData<List<Movie>> getSimilarMovies(int movieId) {
+        Call<MoviesApiResponse> call = mCallProvider.getSimilar(movieId, mApiKey);
+        return Transformations.map(mCallHandler.getData(call), MoviesApiResponse::getResults);
     }
 }
