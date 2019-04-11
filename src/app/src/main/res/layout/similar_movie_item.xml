@@ -13,6 +13,7 @@
     <LinearLayout
         android:layout_width="@dimen/movie_item_width"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/horizontal_margin"
         android:orientation="vertical">
 
         <ImageView
@@ -26,7 +27,7 @@
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{movie.title}"
             android:textAlignment="center"
